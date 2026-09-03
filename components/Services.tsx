@@ -45,7 +45,7 @@ const Services: React.FC = () => {
           {SERVICES.map((service) => (
             <div 
                 key={service.id} 
-                className="min-w-[280px] md:min-w-[350px] snap-center group relative rounded-2xl overflow-hidden aspect-[4/5] bg-dark-800 flex-shrink-0"
+                className="min-w-[280px] max-w-[280px] md:min-w-[350px] md:max-w-[350px] snap-center group relative rounded-2xl overflow-hidden aspect-[4/5] bg-dark-800"
             >
               {/* Background Image */}
               <img 
