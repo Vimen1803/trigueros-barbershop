@@ -1,49 +1,80 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { SERVICES, BOOKSY_URL } from '../constants';
-import { Clock, Tag } from 'lucide-react';
+import { Clock, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const Services: React.FC = () => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount = 350;
+      if (direction === 'left') {
+        current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      } else {
+        current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      }
+    }
+  };
+
   return (
     <section id="services" className="py-24 bg-dark-950 relative">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 uppercase tracking-tighter">Nuestros <span className="text-gold-500">Servicios</span></h2>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+            <div>
+                <h2 className="text-3xl md:text-4xl font-black text-white mb-2 tracking-tighter">NUESTROS <span className="text-gold-500">SERVICIOS</span></h2>
+            </div>
+            
+            {/* Arrows hidden on mobile, visible on md+ */}
+            <div className="hidden md:flex items-center gap-4">
+                 <button onClick={() => scroll('left')} className="p-3 rounded-full border border-dark-700 text-white hover:bg-gold-500 hover:text-dark-950 transition-colors">
+                    <ChevronLeft size={20} />
+                 </button>
+                 <button onClick={() => scroll('right')} className="p-3 rounded-full border border-dark-700 text-white hover:bg-gold-500 hover:text-dark-950 transition-colors">
+                    <ChevronRight size={20} />
+                 </button>
+            </div>
         </div>
 
-        {/* 2 columns on mobile (grid-cols-2), 2 on md, 2 on lg */}
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-3 md:gap-8 max-w-5xl mx-auto">
+        {/* Carousel Container */}
+        <div 
+            ref={scrollRef}
+            className="flex overflow-x-auto gap-6 pb-8 snap-x snap-mandatory scrollbar-hide"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
           {SERVICES.map((service) => (
             <div 
-              key={service.id} 
-              className="group bg-dark-900 rounded-xl overflow-hidden border border-dark-800 hover:border-gold-500/50 transition-all duration-300 hover:shadow-[0_0_20px_rgba(245,158,11,0.1)] flex flex-col"
+                key={service.id} 
+                className="min-w-[280px] md:min-w-[350px] snap-center group relative rounded-2xl overflow-hidden aspect-[4/5] bg-dark-800 flex-shrink-0"
             >
-              {/* Image Container - smaller height on mobile */}
-              <div className="h-32 md:h-48 overflow-hidden relative">
-                <img 
-                    src={service.image} 
-                    alt={service.name} 
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute top-2 right-2 md:top-4 md:right-4 bg-gold-500 text-dark-950 font-bold px-2 py-0.5 md:px-3 md:py-1 rounded shadow-lg flex items-center gap-1 text-[10px] md:text-sm">
-                    <Tag size={12} className="md:w-[14px] md:h-[14px]" /> {service.price}
-                </div>
+              {/* Background Image */}
+              <img 
+                src={service.image} 
+                alt={service.name} 
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+              
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-dark-950 via-dark-950/60 to-transparent opacity-90"></div>
+              
+              {/* Price Badge */}
+              <div className="absolute top-4 right-4 bg-gold-500 text-dark-950 font-bold px-3 py-1 rounded shadow-lg flex items-center gap-1 text-sm">
+                  <Tag size={14} /> {service.price}
               </div>
               
-              <div className="p-3 md:p-6 flex flex-col flex-grow">
-                <div className="flex justify-between items-start mb-1 md:mb-2">
-                    <h3 className="text-sm md:text-xl font-bold text-white group-hover:text-gold-500 transition-colors leading-tight">
-                    {service.name}
-                    </h3>
-                </div>
+              {/* Content at bottom */}
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <h3 className="text-xl font-bold text-white group-hover:text-gold-500 transition-colors mb-2">
+                  {service.name}
+                </h3>
                 
-                <div className="flex items-center gap-1 md:gap-2 text-gray-500 text-[10px] md:text-xs font-medium mb-2 md:mb-4 uppercase tracking-wide">
-                    <Clock size={12} className="text-gold-500 md:w-[14px] md:h-[14px]" />
+                <div className="flex items-center gap-2 text-gray-400 text-xs font-medium mb-3 uppercase tracking-wide">
+                    <Clock size={14} className="text-gold-500" />
                     {service.duration}
                 </div>
 
-                {/* Description clamped or smaller on mobile */}
-                <p className="text-gray-400 text-xs md:text-sm mb-3 md:mb-6 leading-relaxed flex-grow line-clamp-2 md:line-clamp-none">
+                <p className="text-gray-300 text-sm mb-4 leading-relaxed line-clamp-2">
                   {service.description}
                 </p>
                 
@@ -51,7 +82,7 @@ const Services: React.FC = () => {
                   href={BOOKSY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full block text-center bg-dark-950 hover:bg-gold-500 text-white hover:text-dark-950 font-bold py-2 md:py-3 rounded border border-dark-800 hover:border-transparent transition-all text-xs md:text-base"
+                  className="w-full block text-center bg-gold-500 hover:bg-gold-400 text-dark-950 font-bold py-3 rounded transition-all text-sm"
                 >
                   RESERVAR
                 </a>

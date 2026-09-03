@@ -4,7 +4,7 @@ import { BOOKSY_URL } from '../constants';
 
 const Hero: React.FC = () => {
   return (
-    <section id="hero" className="relative h-[650px] flex items-center justify-center overflow-hidden">
+    <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
