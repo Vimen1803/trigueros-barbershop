@@ -1,0 +1,7 @@
+{
+  "name": "Copy of Triguero's Barbershop",
+  "description": "Sitio web profesional para Triguero's Barbershop en Zaragoza con reservas en Booksy, galería de estilos y chatbot con IA.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
